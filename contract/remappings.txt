@@ -1,0 +1,3 @@
+@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
+@chainlink/ccip/contracts/=lib/ccip/contracts/
+wormhole-sdk/=lib/wormhole-solidity-sdk/src/
