@@ -21,7 +21,7 @@ export function Header({ onMenuClick }: HeaderProps) {
         {/* Logo for mobile */}
         <div className="md:hidden flex items-center gap-2">
           <div className="w-8 h-8 rounded-full bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-sm">CV</span>
+            <span className="text-primary-foreground font-bold text-sm">WG</span>
           </div>
         </div>
 
