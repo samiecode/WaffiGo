@@ -12,10 +12,11 @@ import {
   ArrowDownUp,
 } from "lucide-react"
 import { Button } from "@/components/ui/button"
+import { TapTypes } from "@/types"
 
 interface SidebarProps {
-  activeTab: string
-  setActiveTab: (tab: "dashboard" | "transfer" | "savings" | "settings" | "history" | "swap") => void
+  activeTab: TapTypes
+  setActiveTab: (tab: TapTypes) => void
 }
 
 export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
@@ -33,10 +34,10 @@ export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-            <span className="text-primary-foreground font-bold text-lg">CV</span>
+            <span className="text-primary-foreground font-bold text-lg">WG</span>
           </div>
           <div>
-            <h1 className="font-bold text-foreground">CeloVault</h1>
+            <h1 className="font-bold text-foreground">WaffiGo</h1>
             <p className="text-xs text-muted-foreground">Web3 Wallet</p>
           </div>
         </div>

@@ -16,10 +16,9 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-	title: "CeloVault | Web3 Wallet",
+	title: "WaffiGo",
 	description:
-		"Cross-chain transfers, spend & save on CELO - Built for Farcaster",
-	generator: "v0.app",
+		"Spend & save on CELO with WaffiGo - the ultimate dApp for effortless payments and automatic savings.",
 };
 
 export const viewport: Viewport = {
