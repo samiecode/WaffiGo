@@ -30,7 +30,7 @@ export async function GET() {
 			webhookUrl: `${URL}/api/webhook`,
 			subtitle: "Web3 Wallet",
 			description:
-				"Spend & save on CELO with WaffiGo. The ultimate dApp for effortless payments and automatic savings.",
+				"Spend and save on CELO with WaffiGo. The ultimate dApp for effortless payments and automatic savings.",
 			screenshotUrls: [
 				"https://ex.co/s1.png",
 				"https://ex.co/s2.png",
