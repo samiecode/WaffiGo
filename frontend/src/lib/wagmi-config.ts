@@ -1,6 +1,7 @@
 import { http, createConfig } from "wagmi"
 import { celo, celoSepolia } from "wagmi/chains"
 import { injected, walletConnect } from "wagmi/connectors"
+import { farcasterMiniApp as miniAppConnector } from "@farcaster/miniapp-wagmi-connector";
 
 const projectId = process.env.NEXT_PUBLIC_WALLET_CONNECT_PROJECT_ID || "demo"
 
@@ -16,11 +17,12 @@ export const config = createConfig({
 					"Spend & save on CELO with WaffiGo - the ultimate dApp for effortless payments and automatic savings.",
 				url: process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000",
 				icons: [
-					`${process.env.NEXT_PUBLIC_APP_ICON_URL}/icon.png` ||
+					`${process.env.NEXT_PUBLIC_APP_URL}/icon.png` ||
 						"http://localhost:3000/icon.png",
 				],
 			},
 		}),
+		miniAppConnector(),
 	],
 	transports: {
 		[celo.id]: http(),
