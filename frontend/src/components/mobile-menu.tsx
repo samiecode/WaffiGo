@@ -62,12 +62,12 @@ export function MobileMenu({
 					<div className="flex items-center gap-3">
 						<div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
 							<span className="text-primary-foreground font-bold text-lg">
-								CV
+								WG
 							</span>
 						</div>
 						<div>
 							<h1 className="font-bold text-foreground">
-								CeloVault
+								WaffiGo
 							</h1>
 							<p className="text-xs text-muted-foreground">
 								Web3 Wallet
