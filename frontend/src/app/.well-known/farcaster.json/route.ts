@@ -12,10 +12,10 @@ export async function GET() {
 	const URL = process.env.NEXT_PUBLIC_APP_URL as string;
 	return Response.json({
 		accountAssociation: {
-			// these will be added in step 5
-			header: "",
-			payload: "",
-			signature: "",
+			header: "eyJmaWQiOjgzODM5NCwidHlwZSI6ImN1c3RvZHkiLCJrZXkiOiIweGNCMDEyNEM0MTlDMTFBNDVBQmQwNGI4OGM0NjQxMmE3RUQwQTIyNzAifQ",
+			payload: "eyJkb21haW4iOiJ3YWZmaS1nby52ZXJjZWwuYXBwIn0",
+			signature:
+				"3s0LsNWrOjfJGuBTAX2E+7WzwfPKQnZ9iK3nhzQp108PvQYzFrEDPHAe+651VQAWqX/6jjfQCQqafd56LhAaPxw=",
 		},
 		baseBuilder: {
 			ownerAddress: "0x274a0F1a24E5Ca748fc5366C2c3833AA840fbf6E", // add your Base Account address here
@@ -36,7 +36,7 @@ export async function GET() {
 				"https://ex.co/s2.png",
 				"https://ex.co/s3.png",
 			],
-			primaryCategory: "social",
+			primaryCategory: "finance",
 			tags: ["example", "miniapp", "celoapp", "baseapp"],
 			heroImageUrl: `${URL}/og.png`,
 			tagline: "Play instantly",
