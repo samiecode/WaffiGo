@@ -20,4 +20,10 @@ export interface WalletState {
 	chainId: number | null;
 }
 
-export type TapTypes = "dashboard" | "transfer" | "savings" | "settings" | "history";
+export type TapTypes =
+	| "dashboard"
+	| "transfer"
+	| "savings"
+	| "settings"
+	| "history"
+	| "swap";

@@ -157,12 +157,19 @@ forge script script/Deploy.s.sol --rpc-url https://reth-ethereum.ithaca.xyz/rpc 
 Deploy directly with forge create:
 
 ```bash
-forge create ./src/SpendAndSave.sol:SpendAndSave \
+forge create ./src/WaffiContract.sol:WaffiContract \
   --rpc-url $CELO_RPC_URL \
   --account deployer \
   --broadcast \
   --constructor-args 1000 \
   --legacy 
+```
+```bash
+forge create src/CeloSwap.sol:CeloSwap \
+  --rpc-url $CELO_RPC_URL \
+  --account deployer \
+  --broadcast \
+  --constructor-args $UBESWAP_ROUTER_ADDRESS $CUSD_ADDRESS 
 ```
 
 The constructor arg `1000` sets the default savings rate to 10% (1000 basis points).
@@ -182,12 +189,22 @@ Verify your contract on Celoscan:
 ```bash
 forge verify-contract \
   $CONTRACT_ADDRESS \
-  ./src/SpendAndSave.sol:SpendAndSave \
+  ./src/WaffiContract.sol:WaffiContract \
   --chain celo-sepolia \
   --verifier blockscout \
   --verifier-api-key $CELOSCAN_API_KEY \
   --verifier-url $CELOSCAN_API_URL \
   --constructor-args $(cast abi-encode "constructor(uint256)" 1000)
+```
+```bash
+forge verify-contract \
+  $CELOSWAP_ADDRESS \
+  ./src/CeloSwap.sol:CeloSwap \
+  --chain celo-sepolia \
+  --verifier blockscout \
+  --verifier-api-key $CELOSCAN_API_KEY \
+  --verifier-url $CELOSCAN_API_URL \
+  --constructor-args $(cast abi-encode "constructor(address,address,address)" $UBESWAP_ROUTER_ADDRESS $WRAPPED_CELO_ADDRESS $CUSD_ADDRESS)
 ```
 
 Replace `$CONTRACT_ADDRESS` with your deployed contract address.

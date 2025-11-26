@@ -10,6 +10,7 @@ import { PiggyBank, Bell, Shield, Palette, Info, Loader2, CheckCircle2 } from "l
 import { useContract } from "@/hooks/use-waffi-contract"
 import { useWallet } from "@/hooks/use-wallet"
 import type { WalletSettings } from "./wallet-dashboard"
+import { toast } from "sonner"
 
 interface SettingsPageProps {
   settings: WalletSettings
@@ -23,7 +24,7 @@ export function SettingsPage({ settings, setSettings }: SettingsPageProps) {
   const [saved, setSaved] = useState(false)
 
   const { isConnected } = useWallet()
-  const { setSavingsRate, userData, isWritePending, isConfirming } = useContract()
+  const { setSavingsRate, setSavingsEnabled, userData, isWritePending, isConfirming } = useContract()
 
   const handleSaveRate = async () => {
     if (!isConnected) return
@@ -76,7 +77,17 @@ export function SettingsPage({ settings, setSettings }: SettingsPageProps) {
             <Switch
               id="save-enabled"
               checked={settings.saveEnabled}
-              onCheckedChange={(checked) => setSettings({ ...settings, saveEnabled: checked })}
+              disabled={isWritePending || isConfirming}
+              onCheckedChange={async (checked) => {
+                if (isConnected) {
+                  try {
+                    await setSavingsEnabled(checked)
+                    setSettings({ ...settings, saveEnabled: checked })
+                  } catch (err) {
+                    toast.error("Failed to update savings enabled")
+                  }
+                }
+              }}
             />
           </div>
 

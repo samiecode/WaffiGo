@@ -14,6 +14,7 @@ export interface UserData {
 	totalSpent: bigint;
 	totalSaved: bigint;
 	effectiveRateBps: bigint;
+	isSavingEnabled: boolean;
 }
 
 export interface Transaction {
@@ -125,6 +126,18 @@ export function useContract() {
 		});
 	};
 
+	// Enable/disable savings
+	const setSavingsEnabled = async (enabled: boolean) => {
+		if (!address) throw new Error("Wallet not connected");
+
+		writeContract({
+			address: CONTRACT_ADDRESS,
+			abi: SPEND_AND_SAVE_ABI,
+			functionName: "setSavingsEnabled",
+			args: [enabled],
+		});
+	};
+
 	// Withdraw savings
 	const withdrawSavings = async () => {
 		if (!address) throw new Error("Wallet not connected");
@@ -143,6 +156,7 @@ export function useContract() {
 				totalSaved: formatEther(userData[1]),
 				savingsRateBps: Number(userData[2]),
 				savingsRatePercent: Number(userData[2]) / 100,
+				isSavingEnabled: userData[3]
 		  }
 		: null;
 
@@ -175,6 +189,7 @@ export function useContract() {
 		// Actions
 		transfer,
 		setSavingsRate,
+		setSavingsEnabled,
 		withdrawSavings,
 		refetchUserData,
 		refetchTransactions,

@@ -1,4 +1,4 @@
-import {celo, celoSepolia} from 'wagmi/chains'
+import {celo, celoSepolia, celoAlfajores} from "wagmi/chains";
 
 export const CONTRACT_ADDRESS = process.env
 	.NEXT_PUBLIC_CONTRACT_ADDRESS as `0x${string}`;
@@ -26,6 +26,19 @@ export const SPEND_AND_SAVE_ABI = [
 		type: "error",
 	},
 	{inputs: [], name: "ReentrancyGuardReentrantCall", type: "error"},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: "address",
+				name: "newCeloSwap",
+				type: "address",
+			},
+		],
+		name: "CeloSwapUpdated",
+		type: "event",
+	},
 	{
 		anonymous: false,
 		inputs: [
@@ -83,6 +96,68 @@ export const SPEND_AND_SAVE_ABI = [
 			{
 				indexed: true,
 				internalType: "address",
+				name: "user",
+				type: "address",
+			},
+			{
+				indexed: true,
+				internalType: "address",
+				name: "token",
+				type: "address",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "celoIn",
+				type: "uint256",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "tokenOut",
+				type: "uint256",
+			},
+		],
+		name: "SwappedCeloToToken",
+		type: "event",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: "address",
+				name: "user",
+				type: "address",
+			},
+			{
+				indexed: true,
+				internalType: "address",
+				name: "token",
+				type: "address",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "tokenIn",
+				type: "uint256",
+			},
+			{
+				indexed: false,
+				internalType: "uint256",
+				name: "celoOut",
+				type: "uint256",
+			},
+		],
+		name: "SwappedTokenToCelo",
+		type: "event",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: "address",
 				name: "sender",
 				type: "address",
 			},
@@ -117,7 +192,26 @@ export const SPEND_AND_SAVE_ABI = [
 				type: "uint256",
 			},
 		],
-		name: "SpentAndSaved",
+		name: "TransferCompleted",
+		type: "event",
+	},
+	{
+		anonymous: false,
+		inputs: [
+			{
+				indexed: true,
+				internalType: "address",
+				name: "user",
+				type: "address",
+			},
+			{
+				indexed: false,
+				internalType: "bool",
+				name: "enabled",
+				type: "bool",
+			},
+		],
+		name: "UserSavingsEnabledUpdated",
 		type: "event",
 	},
 	{
@@ -141,6 +235,22 @@ export const SPEND_AND_SAVE_ABI = [
 	},
 	{
 		inputs: [],
+		name: "DEFAULT_SAVINGS_ENABLED",
+		outputs: [{internalType: "bool", name: "", type: "bool"}],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
+		name: "celoSwap",
+		outputs: [
+			{internalType: "contract ICeloSwap", name: "", type: "address"},
+		],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [],
 		name: "defaultSavingsRateBps",
 		outputs: [{internalType: "uint256", name: "", type: "uint256"}],
 		stateMutability: "view",
@@ -149,6 +259,26 @@ export const SPEND_AND_SAVE_ABI = [
 	{
 		inputs: [],
 		name: "getContractBalance",
+		outputs: [{internalType: "uint256", name: "", type: "uint256"}],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{internalType: "address", name: "tokenIn", type: "address"},
+			{internalType: "uint256", name: "tokenAmount", type: "uint256"},
+		],
+		name: "getEstimatedCeloForToken",
+		outputs: [{internalType: "uint256", name: "", type: "uint256"}],
+		stateMutability: "view",
+		type: "function",
+	},
+	{
+		inputs: [
+			{internalType: "address", name: "tokenOut", type: "address"},
+			{internalType: "uint256", name: "celoAmount", type: "uint256"},
+		],
+		name: "getEstimatedTokenForCelo",
 		outputs: [{internalType: "uint256", name: "", type: "uint256"}],
 		stateMutability: "view",
 		type: "function",
@@ -163,6 +293,11 @@ export const SPEND_AND_SAVE_ABI = [
 				internalType: "uint256",
 				name: "effectiveRateBps",
 				type: "uint256",
+			},
+			{
+				internalType: "bool",
+				name: "isSavingEnabled",
+				type: "bool",
 			},
 		],
 		stateMutability: "view",
@@ -208,7 +343,7 @@ export const SPEND_AND_SAVE_ABI = [
 						type: "uint256",
 					},
 				],
-				internalType: "struct SpendAndSave.Transaction[]",
+				internalType: "struct WaffiContract.Transaction[]",
 				name: "",
 				type: "tuple[]",
 			},
@@ -231,10 +366,24 @@ export const SPEND_AND_SAVE_ABI = [
 		type: "function",
 	},
 	{
+		inputs: [{internalType: "address", name: "_celoSwap", type: "address"}],
+		name: "setCeloSwap",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
 		inputs: [
 			{internalType: "uint256", name: "newRateBps", type: "uint256"},
 		],
 		name: "setDefaultSavingsRate",
+		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [{internalType: "bool", name: "enabled", type: "bool"}],
+		name: "setSavingsEnabled",
 		outputs: [],
 		stateMutability: "nonpayable",
 		type: "function",
@@ -245,6 +394,70 @@ export const SPEND_AND_SAVE_ABI = [
 		],
 		name: "setSavingsRate",
 		outputs: [],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{internalType: "uint256", name: "amountIn", type: "uint256"},
+			{internalType: "uint256", name: "amountOutMin", type: "uint256"},
+			{internalType: "uint256", name: "deadline", type: "uint256"},
+		],
+		name: "swapCUSDToCelo",
+		outputs: [
+			{internalType: "uint256", name: "amountOut", type: "uint256"},
+		],
+		stateMutability: "nonpayable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{internalType: "uint256", name: "amountOutMin", type: "uint256"},
+			{internalType: "uint256", name: "deadline", type: "uint256"},
+		],
+		name: "swapCeloToCEUR",
+		outputs: [
+			{internalType: "uint256", name: "amountOut", type: "uint256"},
+		],
+		stateMutability: "payable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{internalType: "uint256", name: "amountOutMin", type: "uint256"},
+			{internalType: "uint256", name: "deadline", type: "uint256"},
+		],
+		name: "swapCeloToCUSD",
+		outputs: [
+			{internalType: "uint256", name: "amountOut", type: "uint256"},
+		],
+		stateMutability: "payable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{internalType: "address", name: "tokenOut", type: "address"},
+			{internalType: "uint256", name: "amountOutMin", type: "uint256"},
+			{internalType: "uint256", name: "deadline", type: "uint256"},
+		],
+		name: "swapCeloToToken",
+		outputs: [
+			{internalType: "uint256", name: "amountOut", type: "uint256"},
+		],
+		stateMutability: "payable",
+		type: "function",
+	},
+	{
+		inputs: [
+			{internalType: "address", name: "tokenIn", type: "address"},
+			{internalType: "uint256", name: "amountIn", type: "uint256"},
+			{internalType: "uint256", name: "amountOutMin", type: "uint256"},
+			{internalType: "uint256", name: "deadline", type: "uint256"},
+		],
+		name: "swapTokenToCelo",
+		outputs: [
+			{internalType: "uint256", name: "amountOut", type: "uint256"},
+		],
 		stateMutability: "nonpayable",
 		type: "function",
 	},
@@ -293,6 +506,7 @@ export const SPEND_AND_SAVE_ABI = [
 			{internalType: "uint256", name: "totalSpent", type: "uint256"},
 			{internalType: "uint256", name: "totalSaved", type: "uint256"},
 			{internalType: "uint256", name: "savingsRateBps", type: "uint256"},
+			{internalType: "bool", name: "isSavingEnabled", type: "bool"},
 		],
 		stateMutability: "view",
 		type: "function",
@@ -307,12 +521,14 @@ export const SPEND_AND_SAVE_ABI = [
 ] as const;
 
 export const CELO_MAINNET = {
-  chainId: celo.id,
-  chainName: celo.name,
-  rpcUrls: celo.rpcUrls.default.http,
-  nativeCurrency: celo.nativeCurrency,
-  blockExplorerUrls: celo.blockExplorers?.default.url ? [celo.blockExplorers.default.url] : [],
-}
+	chainId: celo.id,
+	chainName: celo.name,
+	rpcUrls: celo.rpcUrls.default.http,
+	nativeCurrency: celo.nativeCurrency,
+	blockExplorerUrls: celo.blockExplorers?.default.url
+		? [celo.blockExplorers.default.url]
+		: [],
+};
 
 export const CELO_SEPOLIA = {
 	chainId: celoSepolia.id,

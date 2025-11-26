@@ -1,6 +1,6 @@
 "use client";
 
-import {useState} from "react";
+import {useState, useEffect} from "react";
 import {Sidebar} from "@/components/sidebar";
 import {Header} from "@/components/header";
 import {BalanceCard} from "@/components/balance-card";
@@ -12,7 +12,9 @@ import {CrossChainTransfer} from "@/components/cross-chain-transfer";
 import {SettingsPage} from "@/components/settings-page";
 import {TransactionHistoryPage} from "@/components/transaction-history-page";
 import {MobileMenu} from "@/components/mobile-menu";
-import { TapTypes } from "@/types";
+import {TapTypes} from "@/types";
+import {SwapWidget} from "@/components/swap-widget";
+import {useContract} from "@/hooks/use-waffi-contract";
 
 export interface WalletSettings {
 	saveEnabled: boolean;
@@ -22,10 +24,31 @@ export interface WalletSettings {
 export function WalletDashboard() {
 	const [activeTab, setActiveTab] = useState<TapTypes>("dashboard");
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+	const {userData, defaultSavingsRate} = useContract();
 	const [settings, setSettings] = useState<WalletSettings>({
 		saveEnabled: true,
 		savePercentage: 10,
 	});
+
+	// Sync settings with contract data when userData loads
+	useEffect(() => {
+		if (userData) {
+			setSettings((prev) => {
+				// Only update if values actually changed to prevent infinite loops
+				if (
+					prev.saveEnabled !== userData.isSavingEnabled ||
+					prev.savePercentage !== userData.savingsRatePercent
+				) {
+					return {
+						saveEnabled: userData.isSavingEnabled,
+						savePercentage:
+							userData.savingsRatePercent ?? prev.savePercentage,
+					};
+				}
+				return prev;
+			});
+		}
+	}, [userData?.isSavingEnabled, userData?.savingsRatePercent]);
 
 	return (
 		<div className="flex min-h-screen bg-background">
@@ -76,6 +99,11 @@ export function WalletDashboard() {
 						/>
 					)}
 					{activeTab === "history" && <TransactionHistoryPage />}
+					{activeTab === "swap" && (
+						<div className="max-w-2xl">
+							<SwapWidget />
+						</div>
+					)}
 				</div>
 			</main>
 		</div>

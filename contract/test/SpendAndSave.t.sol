@@ -2,16 +2,16 @@
 pragma solidity ^0.8.20;
 
 import {Test} from "forge-std/Test.sol";
-import {SpendAndSave} from "../src/SpendAndSave.sol";
+import {WaffiContract} from "../src/WaffiContract.sol";
 
 contract SpendAndSaveTest is Test {
-    SpendAndSave public spendAndSave;
+    WaffiContract public spendAndSave;
     address public user = address(1);
     address payable public recipient = payable(address(2));
     address public mockWormholeRelayer = address(3);
 
     function setUp() public {
-        spendAndSave = new SpendAndSave(1000, mockWormholeRelayer); // 10% default
+        spendAndSave = new WaffiContract(1000); // 10% default
         vm.deal(user, 100 ether);
     }
 

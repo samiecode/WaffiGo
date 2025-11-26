@@ -1,18 +1,28 @@
 "use client"
 
 import { cn } from "@/lib/utils"
-import { LayoutDashboard, ArrowUpRight, PiggyBank, Settings, HelpCircle, LogOut, History } from "lucide-react"
+import {
+  LayoutDashboard,
+  ArrowUpRight,
+  PiggyBank,
+  Settings,
+  HelpCircle,
+  LogOut,
+  History,
+  ArrowDownUp,
+} from "lucide-react"
 import { Button } from "@/components/ui/button"
 
 interface SidebarProps {
   activeTab: string
-  setActiveTab: (tab: "dashboard" | "transfer" | "savings" | "settings" | "history") => void
+  setActiveTab: (tab: "dashboard" | "transfer" | "savings" | "settings" | "history" | "swap") => void
 }
 
 export function Sidebar({ activeTab, setActiveTab }: SidebarProps) {
   const navItems = [
     { id: "dashboard", label: "Dashboard", icon: LayoutDashboard },
     { id: "transfer", label: "Send", icon: ArrowUpRight },
+    { id: "swap", label: "Swap", icon: ArrowDownUp },
     { id: "savings", label: "Savings", icon: PiggyBank },
     { id: "history", label: "History", icon: History },
   ]
