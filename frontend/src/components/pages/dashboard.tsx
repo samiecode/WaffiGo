@@ -67,9 +67,7 @@ export function Dashboard() {
 						Track your spending and savings on Celo
 					</p>
 				</div>
-				<div className="text-2xl font-bold">
-					{balance ? Number.parseFloat(balance).toFixed(2) : "0.00"} CELO
-				</div>
+				
 			</div>
 
 			<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">

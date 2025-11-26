@@ -19,3 +19,5 @@ export interface WalletState {
 	isConnected: boolean;
 	chainId: number | null;
 }
+
+export type TapTypes = "dashboard" | "transfer" | "savings" | "settings" | "history";

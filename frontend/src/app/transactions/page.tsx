@@ -2,7 +2,7 @@
 
 import {useWallet} from "@/hooks/use-wallet";
 import {WalletConnect} from "@/components/wallet-connect";
-import {TransactionHistory} from "@/components/transaction-history";
+import {TransactionHistory} from "@/components/transaction-history_";
 import {AppLayout} from "@/components/app-layout";
 import {CELO_MAINNET, CELO_SEPOLIA} from "@/lib/contract";
 
