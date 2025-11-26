@@ -22,15 +22,15 @@ export const metadata: Metadata = {
 	other: {
 		"fc:miniapp": JSON.stringify({
 			version: "next",
-			imageUrl: "https://your-app.com/embed-image",
+			imageUrl: `${process.env.NEXT_PUBLIC_APP_URL}/embed-image`,
 			button: {
-				title: `Launch Your App Name`,
+				title: `Launch ${process.env.NEXT_PUBLIC_APP_NAME}`,
 				action: {
 					type: "launch_miniapp",
-					name: "Your App Name",
-					url: "https://your-app.com",
-					splashImageUrl: "https://your-app.com/splash-image",
-					splashBackgroundColor: "#000000",
+					name: process.env.NEXT_PUBLIC_APP_NAME,
+					url: process.env.NEXT_PUBLIC_APP_URL,
+					splashImageUrl: `${process.env.NEXT_PUBLIC_APP_URL}/l.png`,
+					splashBackgroundColor: "#4bfa00",
 				},
 			},
 		}),
